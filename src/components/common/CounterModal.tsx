@@ -9,7 +9,7 @@ interface CounterModalProps {
 }
 
 export function CounterModal({ isOpen, onClose }: CounterModalProps) {
-  const { counter, increment, decrement, isPending, isConfirming, refetchCounter } = useCounter();
+  const { counter, increment, decrement, isPending, isConfirming } = useCounter();
 
   if (!isOpen) return null;
 
