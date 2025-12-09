@@ -1,6 +1,8 @@
-# **BlOcX**TacToe 🎮 – Frontend
+# **BlOcX**TacToe 🎮 – Frontend (Celo)
 
-A fully decentralized, peer-to-peer Tic Tac Toe game built on Ethereum with ETH betting functionality. Players can create games, join existing games, and compete for ETH rewards in a trustless, onchain environment.
+A fully decentralized, peer-to-peer Tic Tac Toe game built on Celo blockchain with native token betting functionality. Players can create games, join existing games, and compete for rewards in a trustless, onchain environment.
+
+> **Note:** This is the Celo deployment of BlOcXTacToe. For the Base deployment, see the main repository.
 
 ## ✨ Features
 
