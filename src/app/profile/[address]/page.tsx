@@ -8,6 +8,7 @@ import ProfileHeader from "@/components/profile/ProfileHeader";
 import GameHistoryTable from "@/components/profile/GameHistoryTable";
 import AnalyticsCharts from "@/components/profile/AnalyticsCharts";
 import MonthlyRecap from "@/components/profile/MonthlyRecap";
+import YearlyRecap from "@/components/profile/YearlyRecap";
 import AchievementBadges from "@/components/profile/AchievementBadges";
 
 interface PageProps {
@@ -37,6 +38,9 @@ export default function ProfilePage({ params }: PageProps) {
 
         {/* Monthly Recap */}
         <MonthlyRecap playerAddress={playerAddress} />
+
+        {/* Yearly Recap */}
+        <YearlyRecap playerAddress={playerAddress} />
 
         {/* Achievement Badges */}
         <AchievementBadges playerAddress={playerAddress} />
