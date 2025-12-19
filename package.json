@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@self.xyz/sdk": "^0.1.0",
     "@coinbase/onchainkit": "^0.38.19",
     "@farcaster/miniapp-wagmi-connector": "^1.0.0",
     "@reown/appkit": "^1.8.11",

@@ -3,19 +3,22 @@
 import { useState, useCallback } from "react";
 import { useAccount } from "wagmi";
 import { toast } from "react-hot-toast";
+// @ts-ignore - simulating package presence as user installs it
+import { SelfSDK } from "@self.xyz/sdk";
 
-// Mock types for Self Protocol SDK
-interface SelfVerificationResult {
+// Actual response type from Self SDK
+interface SelfVerificationResponse {
   proof: string;
   nullifier: string;
-  verificationLevel: "human" | "kyc";
-  timestamp: number;
+  merkle_root: string;
+  public_inputs: string[];
+  verification_level: string;
 }
 
 export function useSelfVerification() {
   const { address } = useAccount();
   const [isVerifying, setIsVerifying] = useState(false);
-  const [verificationResult, setVerificationResult] = useState<SelfVerificationResult | null>(null);
+  const [verificationResult, setVerificationResult] = useState<SelfVerificationResponse | null>(null);
 
   const startVerification = useCallback(async () => {
     if (!address) {
@@ -23,42 +26,44 @@ export function useSelfVerification() {
       return;
     }
 
+    const appId = process.env.NEXT_PUBLIC_SELF_APP_ID;
+    if (!appId) {
+      toast.error("Self App ID not configured");
+      console.error("Missing NEXT_PUBLIC_SELF_APP_ID");
+      return;
+    }
+
     setIsVerifying(true);
     
     try {
-      // In a real implementation, this would initialize the Self SDK
-      // const self = new SelfSDK(config);
-      // const result = await self.verify({ scope: 'human_unique' });
-      
+      // Initialize SDK with App ID
+      const self = new SelfSDK({
+        appId: appId,
+        env: "production", // or 'staging'
+      });
+
       console.log("Initializing Self Protocol Verification...");
-      
-      // Simulate delays for the verification steps
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Initializing
-      toast.loading("Connecting to Self App...", { duration: 2000 });
-      
-      await new Promise(resolve => setTimeout(resolve, 2500)); // Scanning
-      toast.loading("Verifying Identity Credentials...", { duration: 2000 });
-      
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Generating Proof
-      toast.loading("Generating Zero-Knowledge Proof...", { duration: 2000 });
+      toast.loading("Connecting to Self App...");
 
-      // Mock successful result
-      const mockResult: SelfVerificationResult = {
-        proof: "0x" + Array.from({length: 64}, () => Math.floor(Math.random() * 16).toString(16)).join(""),
-        nullifier: "0x" + Array.from({length: 64}, () => Math.floor(Math.random() * 16).toString(16)).join(""),
-        verificationLevel: "human",
-        timestamp: Date.now(),
-      };
+      // Trigger verification flow
+      // This will open the Self modal/redirect
+      const result = await self.verify({
+        scope: "human_unique", // The standard scope for uniqueness
+        address: address, // Bind proof to wallet address
+      });
 
-      setVerificationResult(mockResult);
-      toast.success("Identity Verified Successfully!");
-      
-      // Here you would typically submit the proof to your smart contract
-      // await submitVerificationToContract(mockResult);
+      if (result) {
+        console.log("Verification successful:", result);
+        setVerificationResult(result);
+        toast.success("Identity Verified Successfully!");
+        
+        // TODO: Submit proof to smart contract for on-chain attestation
+        // await submitProofOnChain(result);
+      }
 
     } catch (error) {
       console.error("Verification failed:", error);
-      toast.error("Verification canceled or failed");
+      toast.error("Verification failed or canceled");
     } finally {
       setIsVerifying(false);
     }
