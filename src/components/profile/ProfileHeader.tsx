@@ -5,6 +5,8 @@ import { useReadContract } from "wagmi";
 import { CONTRACT_ADDRESS } from "@/config/constants";
 import blocxtactoeAbiArtifact from "@/abi/blocxtactoeabi.json";
 import { Trophy, Target, TrendingUp, Calendar } from "lucide-react";
+import VerifyWithSelf from "../verification/VerifyWithSelf";
+import VerificationBadge from "../verification/VerificationBadge";
 
 const blocxtactoeAbi = (blocxtactoeAbiArtifact as { abi: unknown[] }).abi;
 
@@ -54,17 +56,25 @@ export default function ProfileHeader({ playerAddress, isOwnProfile }: ProfileHe
     <div className="bg-gradient-to-br from-purple-900/40 to-blue-900/40 backdrop-blur-md rounded-2xl p-8 border border-purple-500/20 shadow-2xl">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
-        <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2">
-            {playerData.username || "Unknown Player"}
-          </h1>
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-1">
+              {playerData.username || "Unknown Player"}
+            </h1>
+            <VerificationBadge address={playerAddress} size="lg" />
+          </div>
           <p className="text-gray-400 text-sm font-mono">
             {playerAddress.slice(0, 6)}...{playerAddress.slice(-4)}
           </p>
           {isOwnProfile && (
-            <span className="inline-block mt-2 px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full">
-              Your Profile
-            </span>
+            <div className="flex gap-2 mt-2">
+              <span className="inline-block px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full">
+                Your Profile
+              </span>
+              <div className="scale-90 origin-left">
+                <VerifyWithSelf />
+              </div>
+            </div>
           )}
         </div>
 
